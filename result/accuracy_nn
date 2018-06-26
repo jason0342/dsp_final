@@ -1,32 +1,16 @@
 ====================== HTK Results Analysis =======================
-  Date: Mon Jun 18 16:19:39 2018
+  Date: Sat Jun 23 14:19:34 2018
   Ref : labels/answer.mlf
   Rec : result/result_nn.mlf
 ------------------------ Overall Results --------------------------
-SENT: %Correct=8.94 [H=39, S=397, N=436]
-WORD: %Corr=28.23, Acc=25.68 [H=476, D=391, S=819, I=43, N=1686]
+SENT: %Correct=66.32 [H=315, S=160, N=475]
+WORD: %Corr=93.83, Acc=88.86 [H=1626, D=71, S=36, I=86, N=1733]
 ===================================================================
 ====================== HTK Results Analysis =======================
-  Date: Mon Jun 18 16:23:47 2018
+  Date: Sat Jun 23 15:41:34 2018
   Ref : labels/answer.mlf
   Rec : result/result_nn.mlf
 ------------------------ Overall Results --------------------------
-SENT: %Correct=31.42 [H=137, S=299, N=436]
-WORD: %Corr=69.04, Acc=65.95 [H=1164, D=400, S=122, I=52, N=1686]
-===================================================================
-====================== HTK Results Analysis =======================
-  Date: Mon Jun 18 16:26:34 2018
-  Ref : labels/answer.mlf
-  Rec : result/result_nn.mlf
------------------------- Overall Results --------------------------
-SENT: %Correct=31.42 [H=137, S=299, N=436]
-WORD: %Corr=69.04, Acc=65.95 [H=1164, D=400, S=122, I=52, N=1686]
-===================================================================
-====================== HTK Results Analysis =======================
-  Date: Mon Jun 18 16:40:15 2018
-  Ref : labels/answer.mlf
-  Rec : result/result_nn.mlf
------------------------- Overall Results --------------------------
-SENT: %Correct=61.04 [H=282, S=180, N=462]
-WORD: %Corr=89.65, Acc=85.92 [H=1541, D=129, S=49, I=64, N=1719]
+SENT: %Correct=67.02 [H=315, S=155, N=470]
+WORD: %Corr=92.36, Acc=88.43 [H=1596, D=69, S=63, I=68, N=1728]
 ===================================================================
