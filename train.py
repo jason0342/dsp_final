@@ -3,9 +3,11 @@ import numpy as np
 from HTK import HTKFile
 import keras.backend as K
 from keras.models import Model
-from keras.layers import Input, Dense, Conv1D, Reshape, GRU, Lambda, TimeDistributed
+from keras.layers import Input, Dense, Conv1D, Reshape, GRU, Lambda
+from keras.layers import TimeDistributed, CuDNNGRU, BatchNormalization
 from keras.preprocessing.sequence import pad_sequences
 from keras.callbacks import TerminateOnNaN, LambdaCallback
+import matplotlib.pyplot as plt
 
 batch_size = 32
 epochs = 50
@@ -57,18 +59,21 @@ print(train_x.shape, train_y.shape, input_lengths.shape, label_lengths.shape)
 def ctc_wrapper(args):
     return K.ctc_batch_cost(*args)
 
-inputs = Input(shape=(None, train_x.shape[2]))
+inputs = Input(shape=(None, train_x.shape[2])) # 39-dim MFCC
 train_labels = Input(shape=(None,))
 input_length = Input(shape=(1,))
 label_length = Input(shape=(1,))
 # x = Conv1D(16, 3, activation='relu')(inputs)
 # x = Conv1D(16, 3, activation='relu')(x)
 # x = Conv1D(16, 3, activation='relu')(x)
-x = TimeDistributed(Dense(128, activation='relu'))(inputs)
+x = BatchNormalization()(inputs)
 x = TimeDistributed(Dense(128, activation='relu'))(x)
 x = TimeDistributed(Dense(128, activation='relu'))(x)
-x = GRU(128, return_sequences=True, activation='relu')(x)
 x = TimeDistributed(Dense(128, activation='relu'))(x)
+x = BatchNormalization()(x)
+# x = GRU(128, return_sequences=True, activation='relu')(x)
+x = CuDNNGRU(128, return_sequences=True)(x)
+x = TimeDistributed(Dense(64, activation='relu'))(x)
 y = TimeDistributed(Dense(11, activation='softmax'))(x)
 loss_output = Lambda(ctc_wrapper)([train_labels, y, input_length, label_length])
 model = Model(inputs=[inputs, train_labels, input_length, label_length], outputs=loss_output)
@@ -82,8 +87,17 @@ test_model = Model(inputs=inputs, outputs=y)
 #     print(pred)
 # debug_cb = LambdaCallback(on_batch_end=debug_pred)
 
-model.fit([train_x, train_y, input_lengths, label_lengths], np.zeros(train_x.shape[0]),
-          batch_size=batch_size, epochs=epochs, validation_split=0.05)
+train_log = model.fit([train_x, train_y, input_lengths, label_lengths], np.zeros(train_x.shape[0]),
+                      batch_size=batch_size, epochs=epochs)
+
+# plot the loss
+plt.plot(train_log.history['loss'])
+plt.title('training loss')
+plt.xlabel('epoch')
+plt.ylabel('ctc_loss')
+plt.yscale('log')
+fig = plt.gcf()
+fig.savefig("loss.png", dpi=100)
 
 # only save the model for testing
 test_model.save("model.h5")
